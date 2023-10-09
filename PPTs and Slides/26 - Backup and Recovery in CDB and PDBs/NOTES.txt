@@ -1,0 +1,12 @@
+I was working on my presentations for IOUG Collaborate, and I came upon this strange behaviour in RMAN 12c (12.1.0.1.0) which to me, shouldn’t happen. Seems that when you do a DROP PLUGGABLE DATABASE , it is the equivalent of DROP DATABASE INCLUDING BACKUPS. This means that if you need to restore your PDB later on, you won’t have this registered – just be careful when dropping them.
+
+If you have a valid RMAN backups then do the following and it will work:
+1) Create a new Auxiliary instance, and do a RMAN restore for the following PDBS only : ROOT, PDB$SEED and the Dropped PDB that needs to be restored.
+
+2) Open this newly created Auxiliary instance.
+
+3) You should be able to see all the 3 PDB (root, pdb$seed and dropped PDB) with all the datafiles.
+
+4) Follow the process of unplugging and then plugging in this dropped PDB from the restored auxiliary instance into the original source CDB and you should be all set.
+
+5) Drop the Auxiliary instance now.
